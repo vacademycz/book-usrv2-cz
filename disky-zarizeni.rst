@@ -2,8 +2,6 @@
 Disky a zařízení
 ################
 
-This is an ordinary paragraph, introducing a block quote.
-
     "V Linuxu je je vše soubor. Pokud to není soubor, je to proces."
 
     -- Kamenné pravidlo souborů v Linuxu
@@ -11,26 +9,25 @@ This is an ordinary paragraph, introducing a block quote.
 Druhy souborů
 *************
 
-Soubor má však velmi široký význam a "běžný" soubor s textem, obrázkem ap. je jen jedním z typů
-souborů, které Linux rozlišuje. Především mezi soubory zahrnujeme i `souborová zařízení`_
-reprezentující různé hardwarové komponenty. Dokonce i složka je zvláštním druhem souboru, který
-obsahuje seznam jiných souborů.
+Soubor v Linuxu má velmi široký význam a "běžný" soubor s textem, obrázkem ap. je jen jedním z druhů
+souborů, které existují. První zvláštností je, že mezi soubory v Linuxu zahrnujeme tzv.
+:ref:`souborová zařízení <souborova-zarizeni>` reprezentující různé hardwarové a jiné komponenty.
+Rovněž složka je zvláštním druhem souboru, který obsahuje seznam jiných souborů.
 
-Přístup "vše je soubor" má velké množství výhod, které postupně objevíte sami.
+Přístup "vše je soubor" má velké množství výhod, které postupně objevíme sami.
 
-Druhy souborů představíme spolu s příkazem ``ls -l``, který s tímto parametrem před oprávněním
-souboru uvede jeho typ.
-
-.. tip:: Skoro jistě můžete místo ``ls -l`` používat ``ll``. Je to tzv. alias, který provede ``ls -l``.
-
-Např. ve výpisu domovské složky ``ls -l ~`` najdeme obyčejný soubor (``-``) a složky (``d``)::
+Typ souboru zobrazuje notoricky známý příkaz ``ls`` s volbou ``-l`` se kterou před oprávněním
+souboru uvede jeho typ (první znak prvního sloupce). Např. ve výpisu domovské složky ``ls -l ~``
+najdeme obyčejný soubor (``-``) a složky (``d``)::
 
     ...
-    -rwxr-xr-x  2 libor libor    4096 Oct 25 23:40 tmp
-    drwxr-xr-x  2 libor libor    4096 Oct 25 23:40 Videos
-    drwxrwxr-x  4 libor libor    4096 Oct 13 10:00 VirtualBox VMs
-    drwxrwxr-x  9 libor libor    4096 Oct 18 13:12 workspace
+    -rwxr-xr-x  2 sandy sandy    1053 Oct 25 23:40 pgadmin.log
+    drwxr-xr-x  2 sandy sandy    4096 Oct 25 23:40 Pictures/
+    drwxrwxr-x  4 sandy sandy    4096 Oct 13 10:00 snap/
+    drwxrwxr-x  9 sandy sandy    4096 Oct 18 13:12 workspace/
     ...
+
+.. tip:: Skoro jistě můžete místo ``ls -l`` používat ``ll``. Je to tzv. alias pro ``ls -l``.
 
 Další druhy souborů najdete v tabulce.
 
@@ -52,38 +49,71 @@ Oddíly a souborové systémy
 Fyzický pevný disk může být rozdělen na více *oddílů (partitions)*. Oddíly jsou na sobě nezávislé a
 pád nebo chyba jednoho neovlivní druhý. OS Linux v typické instalaci používá více oddílů.
 
-Důvod je především historický, kdy ještě nebyly používány žurnálovací *souborové systémy
+Důvod je především historický, kdy ještě nebyly používány *žurnálovací souborové systémy
 (filesystems)* a problém by mohl vést až ke ztrátě dat. Ale i dnes má rozdělení na více oddílů
-význam. Vytvoříte skript, který nedopatřením zaplní veškeré místo a zastaví se tím systém. Protože
-skript běží na samostatném oddílu, nemůže ovlivnit oddíl s OS.
+význam. Databáze může např. nekontrolovaně zaplnit veškeré místo do posledního bajtu a zastavit
+systém. Tím že jsou však soubory na jiném oddílu, než OS, nebude tím chod OS ovlivněný.
 
-.. topic:: Žurnálovací filesystem
+.. topic:: Žurnálovací file systémy
 
-   Zabezpečuje data před neočekávaným výpadkem napájení nebo odpojením zařízení tím, že zapisuje
-   změny nejprve do speciálního záznamu - žurnálu - a teprve pak pak skutečně na disk. Následně je
-   údaj o úspěšné realizaci zaveden do žurnálu a nakonec je zrušen. Díky tomu je možné v případě
+   Zabezpečují data před neočekávaným výpadkem napájení nebo odpojením zařízení tím, že zapisují
+   změny nejprve do speciálního záznamu - žurnálu - a teprve pak skutečně na disk. Následně je údaj
+   o úspěšné "realizaci" na disku zapsán do žurnálu a nakonec zrušen. Díky tomu je možné v případě
    přerušení vrátit stav na před operací nebo ji dokončit.
 
-   Žurnálování nechrání před chybami na disku a logickými chybami. Pro ochranu tohoto druhu slouží
-   RAID.
+   Žurnálování nechrání však před chybami na disku a logickými chybami. Pro ochranu tohoto druhu
+   slouží např. RAID.
 
-   Dnes žurnálují takřka všechny moderní filesystémy: NTFS (Win), HFS+ (Mac), všechny \*nixové FS
-   jako ext3, ext4, ReiserFS, XFS, JFS, ZFS. Staričký FAT žurnálový není.
+   Staričký FAT žurnálový není. Jinak žurnálují takřka všechny moderní filesystémy: NTFS (Win), HFS+
+   (Mac), všechny unixové a linuxové FS jako ext3, ext4, ReiserFS, XFS, JFS, ZFS.
 
 Linux obvykle ke správné činnosti využívá nejméně dva druhy oddílů:
 
 * *datový (běžný) oddíl* naformátovaný na některý z řady podporovaných souborových systémů pro
   ukládání dat OS nebo uživatelských dat. Běžných oddílů lze mít více.
 
-* *odkládací oddíl*, který nemá žádné naformátování (je tzv. raw). Využívá ho OS při nedostatku RAM.
+* *odkládací (swap) oddíl*, který nemá žádné naformátování (je tzv. raw). Využívá ho OS při nedostatku RAM.
   Tento princip virtuální paměti podporují dnes všechny velké OS.
 
 .. todo:: odkaz do předchozího dílu knihy:
+
 .. ..tip:: Více o instalaci, vhodném rozvržení disku, volbě velikosti odkládacího oddílu naleznete v <<../usrv1/02-instalace.adoc>>.
 
 
 Startování z disku
 ******************
+
+.. todo:: tutu sekci "Startování z disku" bych viděl na odstranění?!
+
+
+.. popis z "man fdisk":
+   DISK LABELS
+          GPT (GUID Partition Table)
+                 GPT is modern standard for the layout of the partition table.  GPT uses 64-bit logical block addresses,  checksums,  UUIDs
+                 and names for partitions and an unlimited number of partitions (although the number of partitions is usually restricted to
+                 128 in many partitioning tools).
+
+                 Note that the first sector is still reserved for a protective MBR in the GPT specification.  It prevents  MBR-only  parti‐
+                 tioning tools from mis-recognizing and overwriting GPT disks.
+
+                 GPT is always a better choice than MBR, especially on modern hardware with a UEFI boot loader.
+
+          DOS-type (MBR)
+                 A  DOS-type partition table can describe an unlimited number of partitions.  In sector 0 there is room for the description
+                 of 4 partitions (called `primary').  One of these may be an extended partition; this is a box holding logical  partitions,
+                 with descriptors found in a linked list of sectors, each preceding the corresponding logical partitions.  The four primary
+                 partitions, present or not, get numbers 1-4.  Logical partitions are numbered starting from 5.
+
+                 In a DOS-type partition table the starting offset and the size of each partition is stored in two  ways:  as  an  absolute
+                 number of sectors (given in 32 bits), and as a Cylinders/Heads/Sectors triple (given in 10+8+6 bits).  The former is OK --
+                 with 512-byte sectors this will work up to 2 TB.  The latter has two problems.  First, these C/H/S fields  can  be  filled
+                 only  when the number of heads and the number of sectors per track are known.  And second, even if we know what these num‐
+                 bers should be, the 24 bits that are available do not suffice.  DOS uses C/H/S only, Windows uses both, Linux  never  uses
+                 C/H/S.  The C/H/S addressing is deprecated and may be unsupported in some later fdisk version.
+
+                 Please, read the DOS-mode section if you want DOS-compatible partitions.  fdisk does not care about cylinder boundaries by
+                 default.
+
 
 Master Boot Record (MBR)
 ========================
@@ -108,124 +138,137 @@ GRUB je standardní boot loader většiny linuxových distribucí. Nahradil star
 Je to "to menu po startu PC s výběrem OS". Umožňuje startovat nejen Linuxy, ale i DOS, Windows, BSD
 a Solaris systémy.
 
+.. todo:: screenshot GRUBu
+
 .. _souborova-zarizeni:
 
 Souborová zařízení
 ******************
 
-Složka ``/dev/`` obsahuje speciální soubory všech zařízeních připojených k počítači. Soubory zařízení se
-vytváří v průběhu instalace nebo dodatečně skriptem ``/dev/MAKEDEV`` a ``MAKEDEV.local`` (o této variantě se
-ale bavit nebudeme).
+Složka ``/dev/`` obsahuje speciální soubory reprezentující zařízení a komponenty připojená k
+počítači. Kromě skutečného hardwaru jde i o různá pseudo a similovaná zařízení jako generátor
+náhodných čísel ap.
 
-.. todo: odkaz do prvního dílu
+.. Soubory zařízení se vytváří v průběhu instalace nebo dodatečně skriptem ``/dev/MAKEDEV`` a
+   ``MAKEDEV.local`` (o této variantě se ale bavit nebudeme). -- Je toto k nečemu užitečné?
+
+.. todo:: "zařízení můžete nastavovat vlastníka, skupinu a oprávnění" odkaz do I.
 
 "Vše je soubor" je doslova geniální rozhodnutí. Zařízením můžete nastavovat
 <<../usrv1/06-souborova-opravneni.adoc,vlastníka, skupinu a oprávnění>>, vytvoření image oddílu se
-rovná čtení souboru, vytištění poslání na zařízení tiskárny atd.
+rovná čtení souboru zařízení oddílu, vytištění může být poslání na soubor zařízení tiskárny atd.
 
 Bloková a znaková zařízení
-**************************
+==========================
 
-Linux rozlišuje mezi znakovými a blokovými zařízeními. Mezi běžnější bloková zařízení patří všechna,
-které umí "udržet" data jako disketa, pevný disk, USB paměť nebo disk ap.
+Linux rozlišuje mezi znakovými a (běžnějšími) blokovými zařízeními.
 
-Znaková:
+Bloková (block device):
 
-* pásky, sériové linky
-* nebufferovaný přímý přístup
-* neznamená, že můžete číst/zapisovat jen po jednom znaku (toto rozhodnutí je na zařízení samotném)
-* sekvenční přístup
-
-Bloková:
-
-* disky
+* umí "udržet" data
+* disketa, pevný disk, USB flash paměť, USB disk ap.
 * můžete číst/zapisovat jakýkoli blok bajtů
 * bufferuje
 * nevýhoda buferování je, že nevíte, že data byla už zapsána na zařízení
 * náhodný přístup
 
+Znaková (character device):
+
+* slouží k "protékání" dat
+* pásky, sériové linky
+* nebufferovaný přímý přístup
+* neznamená, že můžete číst/zapisovat jen po jednom znaku (toto rozhodnutí je na zařízení samotném)
+* sekvenční přístup
+
+
 Nejdůležitější zařízení v ``/dev/``
-***********************************
+===================================
 
 Následující výčet není v žádném případě úplný. Seznámíme se jen s některými nejdůležitějšími
-zařízeními a pochopitelně ne všechny musí být ve vašem Linuxu přítomny. Některé zařízení jsou
-imaginární nebo dokonce "vtipná".
+skutečnými i pseudo zařízeními. Ne všechna musí být ve vašem Linuxu, resp. v počítači existovat.
+
+.. note:: Některá zařízení a souborové zařízení jsou již pomalu počítačovým dávnověkem, ale
+   přesto se domníváme, že stojí za to je zmínit.
 
 .. rubric:: ``/dev/fd[0-9]``
 
-První disketová jednotka je fd0. Druhá fd1 ap.
+První disketová jednotka je ``fd0``. Druhá ``fd1`` ap.
 
 .. rubric:: ``/dev/hd[a-d]``
 
-IDE disky. hda je primary master, hdb je primary slave, hdc secondary master, hdd secondary slave.
+Pevné disky připojené přes IDE rozhraní. ``hda`` je primary master, ``hdb`` je primary slave,
+``hdc`` secondary master, ``hdd`` secondary slave.
 
 .. rubric:: ``/dev/hd[a-d][1-9]``
 
 Oddíly na daném IDE disku. Oddíly 1-4 jsou primární oddíly. Oddíly 5+ jsou logické oddíly uvnitř
-rozšířených oddílů. Takže např. hdb1 je primární partition na primary master.
+rozšířených oddílů. Takže např. ``hdb1`` je primární partition na primary master.
 
 .. rubric:: ``/dev/lp[0-9]``
 
-lp0 je první paralelní tiskárna ap.
+``lp0`` je první paralelní tiskárna ap.
 
 .. rubric:: ``/dev/loop[0-9]``
 
-Tzv. loopback zařízení jsou pseudozařízení zpřístupnění souboru jako blokového zařízení (např.
-připojení .iso obrazu)
+Tzv. loopback zařízení jsou pseudozařízení sloužící ke zpřístupnění souboru jako blokového zařízení
+(např. připojení .iso obrazu jako disku).
 
 .. rubric:: ``/dev/null``
 
-Neboli "černá díra" ve které nenávratně zmizí cokoli tam zapíšete. Užitečnost tohoto zařízení je
+"Černá díra" ve které nenávratně zmizí cokoli tam zapíšete. Užitečnost tohoto zařízení je
 hlavně pro skripty, kdy do černé díry přesměrujete výstup, která vás nezajímá.
 
 .. code-block:: shell
 
-   # stderr výstup nás nezajímá - přesměrován do černé díry
+   # stderr výstup findu nás nezajímá - přesměrován do černé díry
    # stdout bude stále na konzoli
-   somecommand 2> /dev/null
-   
+   $ find / -name foo 2> /dev/null
 
-.. rubric:: /dev/psaux
+.. rubric:: ``/dev/psaux``
 
-Port myši PS/2.
+PS/2 port.
 
-.. rubric:: /dev/cdrom a /dev/dvd
+.. rubric:: ``/dev/cdrom`` a ``/dev/dvd``
 
-Jsou jen linky na konkrétní konkrétní sr* zařízení.
+CD, resp. DVD mechanika. Jde o linky na konkrétní :ref:`sr* zařízení <sr-device>`.
 
-.. rubric:: /dev/random a urandom
+.. rubric:: ``/dev/random`` a ``/dev/urandom``
 
-Generátory náhodných čísel. random je nedeterministický, což znamená, že následující číslo nelze
-odhadnout z předchozích čísel. urandom je "pouze" pseudonáhodné, ale taky rychlejší. Nezáleží vám na
-vysoké bezpečnosti, postačí urandom.
+Generátory náhodných čísel. ``random`` je nedeterministický, což znamená, že následující číslo nelze
+odhadnout z předchozích čísel. ``urandom`` je "pouze" pseudonáhodný, ale taky rychlejší. Nezáleží
+vám na vysoké bezpečnosti, postačí ``urandom``.
 
-Chcete vytvořit umělé zatížení PC? Čtěte z urandom a posílejte ho do null.
+.. tip:: Příklady využití souborů ``random`` a ``uranom``.
 
-::
+   Chcete vytvořit umělé zatížení PC? Čtěte z ``urandom`` a posílejte ho do ``null``.
 
-   cat /dev/urandom > /dev/null
+   ::
 
-Chcete vytvořit 10 MB "náhodný" soubor (náhodného obsahu)?
+      cat /dev/urandom > /dev/null
 
-::
+   Chcete vytvořit 10 MB "náhodný" soubor (náhodného obsahu)?
 
-   dd if=/dev/urandom of=random.bin bs=1M count=10
+   ::
 
-.. rubric:: /dev/sd[a-z]
+      dd if=/dev/urandom of=random.bin bs=1M count=10
 
-Původně sd zařízení byli SCSI disky, ale toto rozhraní se nikdy výrazněji nerozšířilo a s masivním
-nástupem SATA disků se vývojáři rozhodli využít tohoto zavedeného souborového zařízení pro toto
-rozhraní. Písmena abecedy jsou přiřazovány, tak jsou zařízení nalezeny na sběrnici - první sda,
-druhé sdb ap.
+.. rubric:: ``/dev/sd[a-z]``
+
+Původně ``sd`` zařízení byli SCSI disky, ale toto rozhraní se nikdy výrazněji nerozšířilo a s
+masivním nástupem SATA disků se vývojáři rozhodli využít tohoto značení pro zařízení s tímto
+rozhraní. Písmena abecedy jsou přiřazovány, tak jsou zařízení nalezeny na sběrnici - první ``sda``,
+druhé ``sdb`` ap.
 
 .. rubric:: ``/dev/sd[a-z][0-9]``
 
-Určuje oddíl na sd disku. Oddíly jsou číslovány od 1. Např. sda2 je druhý oddíl na prvním SATA
-disku.
+Určuje oddíl na konkrétním SATA disku. Oddíly jsou číslovány od 1. Např. ``sda3`` je třetí oddíl na
+prvním SATA disku.
+
+.. _sr-device:
 
 .. rubric:: ``/dev/sr[0-9]``
 
-Souborové zařízení pro CD/DVD-ROM. sr0 je první, sr1 druhé ap.
+Souborové zařízení pro CD/DVD-ROM. ``sr0`` je první, ``sr1`` druhé atd.
 
 .. rubric:: ``/dev/ttyS[0-9]``
 
@@ -233,42 +276,78 @@ Sériový port.
 
 .. rubric:: ``/dev/zero``
 
-Čtení zero zařízení vrátí vždy nulu. Užitečnost je opět spíše pro skripty, kdy chcete vytvořit velký
-soubor vyplnit do určité velikosti nulami.
+Čtení zero zařízení vrátí vždy nulové znaky (0x00). Užitečnost je opět spíše pro skripty, kdy chcete
+vytvořit velký soubor vyplnit do určité velikosti "ničím".
+
+.. todo:: odkaz "kontrolní znak" do I.
+
+.. note:: Nulový znak (občas ``NUL`` nebo ``\0``) není nula! Jde o kontrolní znak podobně jako
+  ``\t`` (tab), ``\n`` (nový řádek) ap. V Unicode i ASCII má hodnotu nula (0x00). Původně význam
+  byl ignorovaný znak, ale dnes v řadě programovacích jazyků indikuje konec řetězce.
 
 Připojení a odpojení
 ********************
 
 Před použitím se musí souborový systém připojit. Linux má plochou adresářovou strukturu. Každá
-složka může být na zcela jiném oddílu. Často se to používá např. pro oddělení ``/var/`` od zbytku
-systému ``/`` na serveru nebo pro umístění OS na rychlý, ale malý SSD a ``/home/`` na pomalý, ale
-velký mechanický HDD.
+složka může být na zcela jiném oddílu.
+
+.. tip:: Často se to používá např. na serveru samostatný oddíl pro ``/var/`` a samotný OS na ``/``.
+   Nebo na notebooku umístění ``/`` na menší, ale rychlejší SSD, a ``/home/`` na pomalejší, ale
+   velký mechanický HDD.
 
 mount
 =====
 
-Pro připojení slouží příkaz ``mount``. V základní podobě akceptuje dva parametry - soubor zařízení
-na kterém leží připojovaný filesystém a složku, kam souborový systém připojit. Cílové složce se
-někdy říká *přípojný bod (mount point)*.
+Pro připojení diskového oddílu slouží příkaz ``mount``. V základní podobě akceptuje dva parametry -
+soubor zařízení na kterém leží připojovaný filesystém a složku, kam ho připojit.
+Této cílové složce se často říká *přípojný bod (mount point)*.
+
+.. rubric:: Základní podoba
+
+Pokud není :ref:`nastaveno jinak <non-root-mount>`, smí mount provádět jen root.
+
+::
+
+    # Připojení sdc5 jako /home/sally/ mount
+    sudo mount /dev/sdc5 /home/sally/
 
 .. important:: Cílová složka nemusí být prázdná, ale musí existovat. Případný předchozí obsah po
    připojení se neztratí, ale je zastíněn a dočasně nedostupný.
 
-::
-
-    # Připojení sdc5 jako /home/joe/ mount
-    /dev/sdc5 /home/joe/
+.. rubric:: Určení souborového typu
 
 Linux podporuje téměř všechny myslitelné souborové systémy a pokusí se jej na zařízení rozpoznat.
-Můžete ale typ určit parametrem ``-t``::
+Přesto bývá dobrým zvykem typ souborového systému určit parametrem ``-t``::
 
     # Explicitní určení souborového systému
-    mount -t ntfs /dev/sdc5 /home/joe/
+    mount -t ntfs /dev/sdc5 /home/sally/win_backup
+
+.. _mount-options:
+
+.. rubric:: Volby připojení
+
+Dalším často používaným parametrem je ``-o`` pro upřesnění způsobu připojení. Např.::
+
+    mount -t ntfs -o ro,user /dev/sdc5 /home/sally/win_backup
+
+Některé volby jsou nezávislé na souborovém systému, některé platí jen pro konkrétní souborové
+systémy. Z obecných a vždy použitelných jsou důležité zejm.:
+
+.. todo:: "právem SUID" ap. jako odkazy do I.
+
+* ``auto`` a ``noauto`` -- viz :ref:`mount-auto-noauto`.
+* ``rw`` a ``ro`` -- připojí zařízení ke čtení i zápisu/pouze ke čtení
+* ``suid`` a ``nosuid`` -- umožní/zakáže spouštění souborů s právem SUID
+* ``exec`` a ``noexec`` -- umožní/zakáže spouštění souborů s právem spustit
+* ``user`` a ``users`` - viz :ref:`non-root-mount`.
+
+Všechny další obecné volby najdete popsány v ``man mount``. Ty specifické v manuálových stránkách
+jednotlivých filesystémů (např. ``man mount.ntfs`` pro NTFS).
 
 umout
 =====
 
-.. note:: Je to opravdu umount, nikoli unmount :-)
+.. note:: Je to opravdu umount, nikoli unmount.
 
 Pro odpojení slouží ``umount`` a má jediný parametr - buď soubor zařízení nebo přípojný bod
 (složku)::
@@ -282,32 +361,83 @@ Pro odpojení slouží ``umount`` a má jediný parametr - buď soubor zařízen
 /etc/fstab
 ==========
 
-Pro automatické připojení během startu OS slouží soubor /etc/fstab.
+Hlavím účelem souboru ``/etc/fstab`` je definice připojení, který se mají provést během startu PC.
 
-.. code-block:: text
-   :caption: Příklad ``/etc/fstab`` pro desktop s rozdělením ``/`` a ``/home/`` a swap oddílem
-   
-   # <file system> <mount point>   <type>  <options>       <dump>  <pass>
-   # / was on /dev/sdb1 during installation
-   UUID=bc36b18b-274f-485e-892b-2f1b113bb34c /               ext4    errors=remount-ro 0       1
-   # /home was on /dev/sda2 during installation
-   UUID=ec39c1cf-e1bf-45bd-b6f2-17ce33dddc65 /home           ext4    defaults        0       2
-   # swap was on /dev/sda1 during installation
-   UUID=458013ba-217f-4bc5-beed-ff43f8cc5ac0 none            swap    sw              0       0
+.. rubric:: Formát souboru
 
-Viz ``man fstab``.
+Jde o jednoduchý textový soubor, kde každý řádek definuje, jedno připojení. Sloupce (pole) oddělené
+mezerami nebo tabulátory jsou
+
+*<zařízení> <přípojný bod> <typ filesystému> <volby> <dump> <pass>*
+
+které mají postupně tento význam:
+
+* \1. pole: *zařízení* -- zdrojové zařízení (odkud), které bývá často místo souborového zařízení (např.
+  ``/dev/sdc3``) specifikováno UUID (Universally Unique Identifier).
+
+  .. note:: UUID (Universally Unique Identifier) je unikátní identifikace diskového zařízení
+     (např. fc64422e-669c-11e8-bd41-0800272870d0). Má výhodu, že je jednoznačné a vytváří se již
+     při naformátování. Stejné zařízení bude připojeno vždy stejně. Klasické určení souborovým
+     zařízením jako např. ``/dev/sda1`` je závislé na pořadí nalezení na sběrnici ap.
+
+     Ke zjištění UUID slouží ``blkid``. Bez parametrů vypíše UUID všech diskových zařízení.
+     UUID konkrétního zařízení např. ``/dev/sda`` zjistíme zadáním ``blkid /dev/sda``.
+
+* \2. pole: *přípojný bod* -- cílový přípojný bod (kam)
+* \3. pole: *typ filesystému* -- typ filesytému na zařízení (ext4, xfs, nts ap.)
+* \4. pole: *volby (mount options)* -- obecné nebo pro file systém specifické :ref:`volby připojení
+  <mount-options>`.
+* \5. pole: *dump* -- 0 nebo 1, pro zálohovat/nezálohovat programem dump. Defaultně 0.
+
+  .. note::  Dump je staričký zálohovací program, který se kterým se skoro jistě nesetkáte a proto
+     toto pole fstabu nemá z dnešního pohledu význam. Může se však přece jen stát, že dump nebo
+     jiný program pro zálohování tento údaj čte.
+
+* \6. pole: *pass* -- pořadí při kontrole svazku programem fsck při startu počítače. 0 znamená nekontrolovat.
+
+Podívejme se na příklad ``/etc/fstab`` serveru s rozdělením ``/``, ``/var/``, swapem a jednou
+vzdálenou složkou připojenou přes NFS::
+
+    UUID=fc64422e-669c-11e8-bd41-0800272870d0   /                   ext4    defaults                    0 0
+    UUID=fc64422f-669c-11e8-bd41-0800272870d0   /var                ext4    defaults                    0 0
+    /swap.img                                   none                swap    sw                          0 0
+    192.168.121.27:/var/logs/patton/            /opt/ezclue/logs/   nfs     bg,hard,intr,nosuid,ro,user 0 0
+
+.. _mount-auto-noauto:
+
+.. rubric:: Připojení po startu
+
+I když je hlavním úkolem fstab připojit záznamy během bootování PC, můžeme mít ve volbách (4. pole)
+záznamu mít uvedeno ``noauto`` a řádek se vynechá.
+
+Pokud ``noauto`` není mezi volbami uvedeno nebo je uvedeno ``auto`` je zařízení připojeno na
+zavolání ``mount -a`` (obvykle ve startovacích skriptech).
+
+.. _non-root-mount:
+
+.. rubric:: Připojování pro běžné uživatele
+
+Jak jsme řekli výše, může připojení a odpojení provádět jen root. Existuje však možnost jak tyto
+operace povolit i pro běžné uživatele. Jestliže mezi volbami (4. pole) v záznamu ve ``fstab``
+je volba
+
+* ``user`` -- umožní se připojení zařízení i ne-root uživatelům. Odpojit ho může jen root a
+  uživatel, který zařízení připojil.
+* ``users`` -- umožní se připojení jakémukoli uživateli. Odpojit ho může také kdokoli, dokonce jiný
+  uživatel, než ho připojil.
 
 Programy pro práci s disky a oddíly
 ***********************************
 
+.. todo:: odkaz do I.
+
 .. caution:: Většina programů vyžaduje root oprávnění (provádějte pomocí <<../usrv1/04-uzivatele-skupiny.adoc#sudo,sudo>>).
-   Bez nich nebude fungovat nebo nebude vypisovat žádné údaje.
+   Vychovanější programy vypíšou chybu, jiné bohužel bez ``sudo`` na obrazovku vůbec nic vytisknout.
 
 dd
 ==
 
-Program pro nízkoúrovňové binární kopírování bajt po bajtu. Vhodné pro image disku, kopii MBR
-(prvních 512 bajtů) ap.
+Program pro nízkoúrovňové binární kopírování bajt po bajtu. Vhodné pro image disku, kopii MBR ap.
 
 Základními parametry jsou ``if`` (input file), ``of`` (output file), ``bs`` (block size), a
 ``count`` (počet).
@@ -315,7 +445,7 @@ Základními parametry jsou ``if`` (input file), ``of`` (output file), ``bs`` (b
 ::
 
     # Vytvoření náhodného 10 MiB souboru
-    dd if=/dev/urandom of=random.bin bs=1M count=10)
+    dd if=/dev/urandom of=random.bin bs=1M count=10
 
 lsusb
 =====
@@ -326,7 +456,7 @@ Důležité parametry jsou ``-t`` pro výpis ve stromu a ``-v`` pro detailní v�
 
 ::
 
-    sudo lsusb -t
+    $ sudo lsusb -t
     /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/2p, 480M
         |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
     /:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/2p, 480M
@@ -345,8 +475,8 @@ lshw
 Základní program pro výpis informací o hardwaru. Může zjistit údaje o přesné konfiguraci paměti,
 obsazených bankách, firmwaru, CPU ap.
 
-Bez parametrů vypíše všechny známé údaje. Kategorii omezíte parametrem ``-C, -class`` např. na
-sítě::
+Bez parametrů vypíše všechny známé údaje. Druh informací omezíte parametrem ``-C, -class`` např. jen
+o síťovém hardware::
 
     sudo lshw -class network
 
@@ -358,13 +488,13 @@ lsof
 Vypisuje na STDOUT informace o souborech otevřených procesem.
 
 Bez parametrů vytvoří velmi dlouhý výstup otevřených souborů všech aktivních procesů. Mezi velkým
-množstvím parametrů zmíníme jen -i pro zjištění jaký proces okupuje síťový port.
+množstvím parametrů zmíníme jen ``-i`` pro zjištění jaký proces okupuje síťový port.
 
 ::
 
-    $ lsof -i:45981
-    COMMAND     PID USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
-    gvfsd-htt 32452 jell  432u  IPv4 2534209      0t0  TCP jell-nb:45981->myapps.developer.ubuntu.com:http (CLOSE_WAIT)
+    $ lsof -i:8000
+    COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    python  2143 sally    3u  IPv4 394753      0t0  TCP localhost:8000 (LISTEN)
 
 fdisk
 =====
@@ -372,46 +502,82 @@ fdisk
 Program stejného jména z MS-DOSu existuje i pro Linux, ale jeho ovládání je založeno na parametrech
 příkazové řádky.
 
-Protože je to nízkoúrovňový program a ukážeme si modernější alternativy, naučíme se jen vypsat
-seznam disků a oddílů na nich::
+Protože existují uživatelský příjemější alternativy jako `cfdisk`_ nebo `parted/gparted`_, použití
+tohoto program je většinou spíše jen k vypsání informací s ``-l`` - disky, UUID, oddíly, velikosti,
+souborové systémy a typ tabulky rozdělení (GPT, MBR, ...)::
 
-    sudo fdisk -l
+    $ sudo fdisk -l
+    Disk /dev/loop0: 86.6 MiB, 90759168 bytes, 177264 sectors
+    Units: sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 512 bytes
+    I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+    Disk /dev/loop1: 86.6 MiB, 90812416 bytes, 177368 sectors
+    Units: sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 512 bytes
+    I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+    Disk /dev/sda: 30 GiB, 32212254720 bytes, 62914560 sectors
+    Units: sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 512 bytes
+    I/O size (minimum/optimal): 512 bytes / 512 bytes
+    Disklabel type: gpt
+    Disk identifier: 17104833-25AA-43D6-8092-97CF7324D8BC
+
+    Device        Start      End  Sectors Size Type
+    /dev/sda1      2048     4095     2048   1M BIOS boot
+    /dev/sda2      4096 20975615 20971520  10G Linux filesystem
+    /dev/sda3  20975616 62912511 41936896  20G Linux filesystem
+
 
 cfdisk
 ======
 
 Snadnější a modernější alternativou je cfdisk, který přípomíná ovládáním fdisk z MS-DOSu.
 
-.. caution:: Je třeba program spustit s parametrem určujicím nad jakým zařízením chceme pracovat.
-
 ::
 
-    sudo cfdisk /dev/sda
+    sudo cfdisk
 
 .. figure:: img/cfdisk.png
 
-parted a gparted
-================
+   Program cfdisk
 
-Textový parted a grafický GParted jsou lepší pokročilejší zástupci programů pro správu disků a
-oddílů. GParted připomíná komerčním Partition Magic.
+
+parted/gparted
+==============
+
+Textový parted a grafický GParted jsou zástupci pokročilých programů pro správu disků a oddílů.
+parted bývá součástí instalace. Klikací GParted připomínající komerční Partition Magic se velmi
+lehce ovládá.
+
+GParted je k dispozici také jako `GParted Live <https://gparted.org/livecd.php>`_, tj.
+jako malá bootovatelná distribuce obsahující nejen GParted, ale i mc, fdisk, SSH, telnet ap.
+
+.. figure:: img/parted.png
+
+.. figure:: img/gparted.png
+
 
 Logical Volume Management (LVM)
 *******************************
 
 .. todo: odkaz do I
+
 .. important:: Úvod a výhody LVM místo tradičního rozvržení disku najdete v
    "../usrv1/02-instalace.adoc#lvm,kapitole o instalaci".
 
-LVM je alternativním a moderní způsob správy disků v Linuxu. Všechny současné distribuce a nástroje
-LVM podporují. Často je to dokonce výchozí volba instalátoru jako v Ubuntu.
+LVM je alternativním a moderní způsob správy disků v Linuxu. Hlavní výhodou LVM je, že všechny
+operace jsou online za běhu bez nutnosti zastavení, restartu vč. změny velikosti oddílů, snapshotů
+ap. Všechny současné distribuce a nástroje LVM podporují.
 
-.. caution:: Současná verze o které budeme dále hovořit je LVM 2. Starším se vyhýbejte.
+.. caution:: Současná verze o které budeme dále hovořit je LVM 2. Nedoporučujeme pracovat se starší
+   verzí LVM.
 
-Terminilogie LVM
+Terminologie LVM
 ================
 
-LVM používá několik klíčových termínů, které musíme vysvětlit:
+LVM používá několik klíčových termínů, které musíme jako první vysvětlit:
 
 * *Volume group (skupina svazků) (VG)* sdružuje LV a PV do jedné administrativní jednotky. Je to
   nejvyšší úroveň členění v LVM. Můžeme ji pojmenovat např. podle počítače nebo "dpt1" ap.
@@ -421,7 +587,8 @@ LVM používá několik klíčových termínů, které musíme vysvětlit:
 * *Physical volume (fyzický svazek) (PV)* je obvykle odpovídá fyzickému zařízení pevného disku, ale
   může se jednat jen o "pohled" na disk třeba v případě softwarového RAIDu.
 
-  * každý PV je rozdělen do úseků dat známých jako physical extent (PE) o stejné velikosti jako LE.
+  * každý PV je rozdělen do úseků dat známých jako physical extent (PE) o stejné velikosti jako
+    logical extent (LE) (viz další odrážka).
 
 * *Logical Volume (logický svazek) (LV)* je ekvivalent diskového oddílu v ne-LVM systému.
   LV je viditelný jako běžné blokové zařízení a obsahuje samotný souborový systém.
@@ -439,25 +606,41 @@ LVM používá několik klíčových termínů, které musíme vysvětlit:
 
    Organizace prvků LVM (obrázek převzat z http://www.markus-gattol.name/ws/lvm.html)
 
-Pokud vás ani toto nepřesvědčilo, tak přidáváme, že všechny operace jsou online, tj. plně "zaživa"
-bez umount, zastavení a restartu stroje.
+Nastavení LVM během instalace
+=============================
 
-Jak začít použít LVM
-=====================
+Nastavit LVM již během instalace je nejjednodušší a doporučený způsob "jak na LVM". Bohužel v
+instalátoru Ubuntu Server 17.10 došlo ke změně a možnost nastavení LVM již během instalace se
+přesunula do tzv. *alternativního instalátoru*.
 
-Instalátor Ubuntu (Server) podporuje a dokonce jako výchozí nabízí rozvržení disku pomocí LVM. Tento
-způsob "jak na LVM" je doporučený a nejsnadnější.
+#. Na stránce https://www.ubuntu.com/download/alternative-downloads najděte "Alternative Ubuntu
+   Server installer".
 
-.. figure:: img/lvm-in-installer.png
+   .. figure:: img/alternative-installer-webpage.png
+
+      Pro pokročilé možnosti instalace jako LVM je třeba sáhnout po alternativním instalátoru.
+
+#. Dostanete se na výpis souborů podle procesorové architektury a podle způsobu stažení
+   (iso/bittorrent ap.). Pravděpodobně hledáte soubor ``ubuntu-18.04-server-arm64.iso`` (
+   klasický instalátor se jmenuje ``ubuntu-18.04-live-server-amd64.iso``).
+
+#. Instalátor nabídne nastavit LVM hned při instalaci.
+
+   .. figure:: img/alternative-installer-guided-lvm.png
+
+   .. figure:: img/alternative-installer-guided-lvm2.png
+
+   .. figure:: img/alternative-installer-guided-lvm3.png
 
 Praktický příklad použití LVM
 =============================
 
-Nástroje pro LVM tvoří sada programů pojmenovaných vg*, pv* a lv* (jako volume group, physical
-volume a logical volume) + sloveso jako create, display, remove ap.
+Nástroje pro LVM tvoří sada programů s názvy začínající vg*, pv* a lv* (jako volume group, physical
+volume a logical volume) + sloveso jako create, display, remove ap. Např. ``vgdisplay`` zobrazí
+informace o volume group.
 
-Ve výchozí instalaci LVM nástroje chybí a musíte je doinstalovat příkazem ``sudo apt-get install
-lvm2``.
+LVM nástroje by měli být standardně nainstalovány, ale kdyby ne, získáte je provedením ``sudo
+apt-get install lvm2``.
 
 .. code-block:: shell
 
