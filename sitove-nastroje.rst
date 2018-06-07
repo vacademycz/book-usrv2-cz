@@ -6,8 +6,20 @@ Síťové nástroje
 Diagnostika sítí
 ****************
 
+.. todo: networkctl status
+
+.. _ifconfig-diagnostika:
+
 ifconfig
 ========
+
+.. todo: že zde jen čteme informace, kdežto v :ref:`ifconfig_konfigurace` nastavujeme.
+
+.. todo: ip - vztah k ifconfigu, místo "ifconfig" spíše "ip addr"
+         vztah k "networkctl status enp0s3"
+
+.. ifconfig bez -a zobrazuje jen aktivní rozhraní
+   volba -s pro stručný výpis
 
 Ifconfig je základní program pro diagnostiku. Bez parametrů nebo se jménem adaptéru vypíše informace
 o síťových rozhraních.

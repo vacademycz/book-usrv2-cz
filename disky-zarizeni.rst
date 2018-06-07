@@ -609,9 +609,9 @@ LVM používá několik klíčových termínů, které musíme jako první vysv�
 Nastavení LVM během instalace
 =============================
 
-Nastavit LVM již během instalace je nejjednodušší a doporučený způsob "jak na LVM". Bohužel v
-instalátoru Ubuntu Server 17.10 došlo ke změně a možnost nastavení LVM již během instalace se
-přesunula do tzv. *alternativního instalátoru*.
+Nastavit LVM již během instalace je nejjednodušší a doporučený způsob "jak na LVM". Ubuntu Server od
+verze 17.10 používá nový instalátor, který prozatím nemá možnost nastavení LVM již během instalace.
+Pro LVM a některé další pokročilé volby je nutné stáhnout tzv. *alternativní instalátor*.
 
 #. Na stránce https://www.ubuntu.com/download/alternative-downloads najděte "Alternative Ubuntu
    Server installer".

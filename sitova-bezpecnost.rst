@@ -24,6 +24,8 @@ firewallem chráněna aniž o tom jejich uživatelé vědí (firewall se totiž 
 jako jsou switche, routery a další) a navíc je většina "zneužitelných" služeb a nástrojů (jako SSH,
 webový server a další) vypnuta nebo není v základní instalaci Ubuntu vůbec zahrnuta.
 
+.. _UFW:
+
 UFW
 ===
 

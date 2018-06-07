@@ -43,6 +43,8 @@ Když proces skončí očekávaným způsobem (nedojde k jeho zabití nebo havá
 procesu vrátit návratový kód. Zda a jaký význam jednotlivým číselným kódům bude rodič přikládat se
 různí. Podle konvence vše kromě nuly obvykle indikuje chybu.
 
+.. _init-systemy:
+
 ************
 Init systémy
 ************
@@ -103,6 +105,8 @@ souborů dozvíte v ``man 5 init``.
 
 Tradiční System V init používal ke konfiguraci soubor ``/etc/inittab``. V Ubuntu s Upstartem
 nepoužívá a ani neexistuje.
+
+.. _sysv_init:
 
 System V init
 =============
@@ -287,6 +291,8 @@ jméno nemá jen popisný charakter.
    lrwxrwxrwx 1 root root  18 úno 23  2015 S40umountfs -> ../init.d/umountfs
    lrwxrwxrwx 1 root root  20 úno 23  2015 S60umountroot -> ../init.d/umountroot
    lrwxrwxrwx 1 root root  16 úno 23  2015 S90reboot -> ../init.d/reboot
+
+.. _systemd:
 
 Systemd
 =======
