@@ -276,8 +276,8 @@ Ipconfig slouží k nastavení síťových zařízení a jako takový neumí nas
 Informace o zařízeních
 ----------------------
 
-Bez parametrů vypíše základní informace o aktivních síťových rozhraních. S parametrem ``-a`` (all) i
-o těch neaktivních. ``-s`` (short) slouží ke stručnému výpisu.
+Bez parametrů vypíše základní informace o aktivních (povolených) síťových rozhraních. S parametrem
+``-a`` (all) i o těch neaktivních (zakázaných). ``-s`` (short) slouží ke stručnému výpisu.
 
 ::
 
@@ -410,6 +410,8 @@ Nastavení nového jména počítače::
 Soubory ``/etc/hosts`` a ``/etc/services``
 ******************************************
 
+.. rubric:: ``/etc/hosts``
+
 Soubor ``/etc/hosts`` je textovým souborem do kterého se Linux podívá jako prvního, jestliže má
 přeložit (resolve) jmenný název (hostname) na IP adresu (např. vacademy.cz na 210.102.2.189). IP
 mohou být jak místní, tak platné z internetu.
@@ -434,6 +436,10 @@ IP vypsat více jmen.
    ff00::0 ip6-mcastprefix
    ff02::1 ip6-allnodes
    ff02::2 ip6-allrouters
+
+.. _etc_services:
+
+.. rubric:: ``/etc/services``
 
 ``/etc/services`` má podobný účel, ale slouží k "překladu" služeb (protokolů) na čísla portů.
 Používá ho řada programů, aby zobrazovala např. místo 22 symbolický název "ssh".
