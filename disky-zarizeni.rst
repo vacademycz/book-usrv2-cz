@@ -469,6 +469,8 @@ Důležité parametry jsou ``-t`` pro výpis ve stromu a ``-v`` pro detailní v�
     /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 5000M
     /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 480M
 
+.. _lshw_disky:
+
 lshw
 ====
 
@@ -480,7 +482,41 @@ o síťovém hardware::
 
     sudo lshw -class network
 
-Dostupné třídy (kategorie) zjistíte ve výpisu ``sudo lshw -short``.
+Dostupné třídy (kategorie) zjistíte ve výpisu ``sudo lshw -short`` (zkráceno)::
+
+    $ sudo lshw -short
+    H/W path         Device     Class          Description
+    ======================================================
+                                system         Inspiron 13-5378 (0740)
+    /0                          bus            0YNG98
+    /0/0                        memory         64KiB BIOS
+    ...
+    /0/1             scsi0      storage
+    /0/1/0.0.0       /dev/sda   disk           256GB SK hynix SC308 S
+    /0/1/0.0.0/1     /dev/sda1  volume         37GiB EXT4 volume
+    /0/1/0.0.0/2     /dev/sda2  volume         4767MiB Linux swap volume
+    /0/1/0.0.0/3     /dev/sda3  volume         196GiB EXT4 volume
+
+Pro disky a disková zařízení jsou užitečné třídy storage, disk a volume. Např. detailní informace o
+SATA řadiči získáte takto::
+
+    $ sudo lshw -c storage
+    *-storage
+       description: SATA controller
+       product: Sunrise Point-LP SATA Controller [AHCI mode]
+       vendor: Intel Corporation
+       physical id: 17
+       bus info: pci@0000:00:17.0
+       version: 21
+       width: 32 bits
+       clock: 66MHz
+       capabilities: storage msi pm ahci_1.0 bus_master cap_list
+       configuration: driver=ahci latency=0
+       resources: irq:276 memory:d1130000-d1131fff memory:d1134000-d11340ff ioport:f090(size=8) ioport:f080(size=4) ioport:f060(size=32) memory:d1133000-d11337ff
+    *-scsi
+       physical id: 1
+       logical name: scsi0
+       capabilities: emulated
 
 lsof
 ====
